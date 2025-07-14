@@ -24,12 +24,9 @@ const Sidebar = ({ isAdmin, activeSection, setActiveSection }) => {
         { id: 'calculatorLink', label: 'Calculator', icon: 'bi-calculator' },
       ]
     : [
-        { id: 'myBillsLink', label: 'My Bills', icon: 'bi-receipt' },
+        
         { id: 'generateBillLink', label: 'Generate Bill', icon: 'bi-file-earmark-text' },
-        { id: 'generateGSTBillLink', label: 'Generate GST Bill', icon: 'bi-file-earmark-spreadsheet' },
-        { id: 'seeAllProductsLink', label: 'See All Products', icon: 'bi-boxes' },
-        { id: 'addStocksLink', label: 'Add Products', icon: 'bi-plus-square' },
-        { id: 'calculatorLink', label: 'Calculator', icon: 'bi-calculator' },
+      
       ];
 
   // Debug log to check props

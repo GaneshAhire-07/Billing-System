@@ -68,16 +68,65 @@ const GenerateBill = ({ isGST }) => {
     }
   };
 
+  useEffect(() => {
+    // Parse total from the total string (ex: "Total: ₹500.00" or "Subtotal: ₹400.00, GST: ₹72.00, Total: ₹472.00")
+    const totalAmt =
+      isGST && total
+        ? parseFloat(total.split("Total: ₹")[1])
+        : total
+        ? parseFloat(total.split("₹")[1])
+        : 0;
+
+    const cash = cashAmount !== "" ? parseFloat(cashAmount) : 0;
+    const online = onlineAmount !== "" ? parseFloat(onlineAmount) : 0;
+
+    if (!isNaN(totalAmt) && (cash !== null || online !== null)) {
+      const remaining = parseFloat((totalAmt - (cash + online)).toFixed(2));
+      if (remaining >= 0) {
+        setCreditAmount(remaining.toString());
+      } else {
+        setCreditAmount("0"); // if total paid > totalAmt, reset credit
+      }
+    }
+  }, [cashAmount, onlineAmount, total]);
+
   const generateInvoice = () => {
     if (items.length === 0) return alert("Add at least one item.");
 
     const totals = calculateTotal();
+    const totalAmt = isGST ? totals.total : totals.total;
+
+    const cash = cashAmount !== "" ? parseFloat(cashAmount) : null;
+    const online = onlineAmount !== "" ? parseFloat(onlineAmount) : null;
+    const credit = creditAmount !== "" ? parseFloat(creditAmount) : null;
+
+    // ✅ Ensure all three values are entered
+    if (cash === null || online === null || credit === null) {
+      return alert("Please enter all three: Cash, Online, and Credit amounts.");
+    }
+
+    // ✅ Prevent invalid or negative values
+    if (cash < 0 || online < 0 || credit < 0) {
+      return alert("Amounts must be 0 or greater.");
+    }
+
+    const paidTotal = cash + online + credit;
+
+    if (paidTotal.toFixed(2) !== totalAmt.toFixed(2)) {
+      return alert(
+        `Payment mismatch! Total: ₹${totalAmt.toFixed(
+          2
+        )}, Paid: ₹${paidTotal.toFixed(2)}`
+      );
+    }
+
     const date = new Date().toISOString().split("T")[0];
     const invoiceId = (
       parseInt(localStorage.getItem("lastInvoiceId") || "0") + 1
     )
       .toString()
       .padStart(4, "0");
+
     const invoice = {
       id: invoiceId,
       date,
@@ -85,24 +134,28 @@ const GenerateBill = ({ isGST }) => {
       customerName,
       ...totals,
       paymentSplit: {
-        cash: parseFloat(cashAmount) || 0,
-        online: parseFloat(onlineAmount) || 0,
-        credit: parseFloat(creditAmount) || 0,
+        cash: cash,
+        online: online,
+        credit: credit,
       },
       type: isGST ? "gst" : "regular",
       status: "Pending",
       paymentDate: null,
     };
+
     const myBills = JSON.parse(localStorage.getItem("myBills")) || [];
     myBills.push(invoice);
     localStorage.setItem("myBills", JSON.stringify(myBills));
     localStorage.setItem("lastInvoiceId", invoiceId);
+
     setPrintModal({ open: true, invoice });
+
     setItems([]);
     setTotal("");
     setCashAmount("");
     setOnlineAmount("");
     setCreditAmount("");
+
     alert(`${isGST ? "GST " : ""}Invoice saved!`);
   };
 
@@ -113,7 +166,6 @@ const GenerateBill = ({ isGST }) => {
     setOnlineAmount("");
     setCreditAmount("");
   };
-
   return (
     <div
       className="p-8 max-w-[75vw] w-full mx-auto my-8"
@@ -192,7 +244,10 @@ const GenerateBill = ({ isGST }) => {
 
         {total && (
           <div className="space-y-1 mt-1">
-            <p>{total}</p>
+            <p className="text-2xl font-bold text-center text-green-700">
+              {total}
+            </p>
+
             <div className="flex flex-col sm:flex-row gap-1">
               <input
                 type="number"
@@ -353,8 +408,28 @@ const GenerateBill = ({ isGST }) => {
                         Cash ₹{printModal.invoice.paymentSplit.cash} / Online ₹
                         {printModal.invoice.paymentSplit.online} / Credit ₹
                         {printModal.invoice.paymentSplit.credit}
+                        
                       </td>
                     </tr>
+
+
+ <tr>
+                      <td
+                        colSpan="3"
+                        className="border px-2 py-1 text-right font-semibold"
+                      >
+                        Pending Rs(₹):
+                      </td>
+                      <td className="border px-2 py-1">
+                     
+                        {printModal.invoice.paymentSplit.credit}
+                        
+                      </td>
+                    </tr>
+
+
+
+
                   </tfoot>
                 </table>
               </div>

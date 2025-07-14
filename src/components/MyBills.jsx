@@ -5,7 +5,11 @@ const MyBills = () => {
   const [bills, setBills] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [printModal, setPrintModal] = useState({ open: false, bill: null });
-  const [editModal, setEditModal] = useState({ open: false, bill: null, index: null });
+  const [editModal, setEditModal] = useState({
+    open: false,
+    bill: null,
+    index: null,
+  });
 
   useEffect(() => {
     displayBills();
@@ -90,9 +94,14 @@ const MyBills = () => {
   };
 
   return (
-    <div className="p-6 max-w-[75vw] w-full mx-auto my-6" style={{ minHeight: '60vh' }}>
+    <div
+      className="p-6 max-w-[75vw] w-full mx-auto my-6"
+      style={{ minHeight: "60vh" }}
+    >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-800">My Bills</h2>
+        <div className="flex items-center space-x-2">
+          <h2 className="text-xl font-bold text-gray-800">My Bills</h2>
+        </div>
         <button
           onClick={handleRefresh}
           className="bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-all duration-200 text-xs"
@@ -100,6 +109,7 @@ const MyBills = () => {
           Refresh
         </button>
       </div>
+
       <div className="mb-6">
         <input
           type="text"
@@ -117,12 +127,15 @@ const MyBills = () => {
           >
             <div>
               <h5 className="text-base font-semibold">
-                {bill.type === "gst" ? "GST Invoice" : "Invoice"} #{bill.id} — {bill.customerName || "Customer"}
+                {bill.type === "gst" ? "GST Invoice" : "Invoice"} #{bill.id} —{" "}
+                {bill.customerName || "Customer"}
               </h5>
               <p className="text-sm text-gray-600">Date: {bill.date}</p>
-              <p className="text-sm text-gray-600">Total: ₹{bill.total.toFixed(2)}</p>
+              <p className="text-sm text-gray-600">
+                Total: ₹{bill.total.toFixed(2)}
+              </p>
             </div>
-            <div className="space-x-2">
+            <div className="flex items-center space-x-2">
               <button
                 onClick={() => handleView(index)}
                 className="bg-indigo-600 text-white px-2 py-1 rounded-lg hover:bg-indigo-700 transition-all duration-200 text-xs"
@@ -147,6 +160,12 @@ const MyBills = () => {
               >
                 Delete
               </button>
+
+              {/* 🔔 Bell Icon */}
+              <i
+                className="bi bi-bell-fill text-xl text-indigo-600 ml-2 transition-all duration-300 hover:text-red-500 hover:scale-125 cursor-pointer"
+                title="Notification"
+              />
             </div>
           </div>
         ))}
@@ -172,7 +191,9 @@ const MyBills = () => {
                   className="w-16 h-16 mr-4 object-contain"
                 />
                 <div className="text-base">
-                  <div className="font-bold">Cirasthayi Technology PVT. LTD.</div>
+                  <div className="font-bold">
+                    Cirasthayi Technology PVT. LTD.
+                  </div>
                   <div className="text-gray-600">
                     Marisoft Tower, Pune 411014 | +91 1234567890
                   </div>
@@ -181,9 +202,19 @@ const MyBills = () => {
               <div className="border-t-2 border-gray-200 pt-4 text-sm">
                 <div className="flex justify-between mb-4">
                   <div>
-                    <strong>{printModal.bill.type === "gst" ? "GST Invoice" : "Invoice"} ID:</strong> {printModal.bill.id}
+                    <strong>
+                      {printModal.bill.type === "gst"
+                        ? "GST Invoice"
+                        : "Invoice"}{" "}
+                      ID:
+                    </strong>{" "}
+                    {printModal.bill.id}
                     {printModal.bill.customerName && (
-                      <> — <strong>Customer:</strong> {printModal.bill.customerName}</>
+                      <>
+                        {" "}
+                        — <strong>Customer:</strong>{" "}
+                        {printModal.bill.customerName}
+                      </>
                     )}
                   </div>
                   <div>
@@ -194,19 +225,31 @@ const MyBills = () => {
                   <table className="w-full border-collapse">
                     <thead>
                       <tr className="bg-gray-100">
-                        <th className="border px-4 py-2 text-left font-semibold">Item Name</th>
-                        <th className="border px-4 py-2 text-left font-semibold">Price</th>
-                        <th className="border px-4 py-2 text-left font-semibold">Quantity</th>
-                        <th className="border px-4 py-2 text-left font-semibold">Total</th>
+                        <th className="border px-4 py-2 text-left font-semibold">
+                          Item Name
+                        </th>
+                        <th className="border px-4 py-2 text-left font-semibold">
+                          Price
+                        </th>
+                        <th className="border px-4 py-2 text-left font-semibold">
+                          Quantity
+                        </th>
+                        <th className="border px-4 py-2 text-left font-semibold">
+                          Total
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {printModal.bill.items.map((item, index) => (
                         <tr key={index} className="hover:bg-gray-50">
                           <td className="border px-4 py-2">{item.name}</td>
-                          <td className="border px-4 py-2">₹{item.price.toFixed(2)}</td>
+                          <td className="border px-4 py-2">
+                            ₹{item.price.toFixed(2)}
+                          </td>
                           <td className="border px-4 py-2">{item.quantity}</td>
-                          <td className="border px-4 py-2">₹{(item.price * item.quantity).toFixed(2)}</td>
+                          <td className="border px-4 py-2">
+                            ₹{(item.price * item.quantity).toFixed(2)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -214,24 +257,39 @@ const MyBills = () => {
                       {printModal.bill.type === "gst" && (
                         <>
                           <tr>
-                            <th colSpan="3" className="border px-4 py-2 text-right font-semibold text-gray-800">
+                            <th
+                              colSpan="3"
+                              className="border px-4 py-2 text-right font-semibold text-gray-800"
+                            >
                               Subtotal:
                             </th>
-                            <th className="border px-4 py-2">₹{printModal.bill.subtotal.toFixed(2)}</th>
+                            <th className="border px-4 py-2">
+                              ₹{printModal.bill.subtotal.toFixed(2)}
+                            </th>
                           </tr>
                           <tr>
-                            <th colSpan="3" className="border px-4 py-2 text-right font-semibold text-gray-800">
+                            <th
+                              colSpan="3"
+                              className="border px-4 py-2 text-right font-semibold text-gray-800"
+                            >
                               GST (18%):
                             </th>
-                            <th className="border px-4 py-2">₹{printModal.bill.gst.toFixed(2)}</th>
+                            <th className="border px-4 py-2">
+                              ₹{printModal.bill.gst.toFixed(2)}
+                            </th>
                           </tr>
                         </>
                       )}
                       <tr>
-                        <th colSpan="3" className="border px-4 py-2 text-right font-semibold text-gray-800">
+                        <th
+                          colSpan="3"
+                          className="border px-4 py-2 text-right font-semibold text-gray-800"
+                        >
                           Total:
                         </th>
-                        <th className="border px-4 py-2">₹{printModal.bill.total.toFixed(2)}</th>
+                        <th className="border px-4 py-2">
+                          ₹{printModal.bill.total.toFixed(2)}
+                        </th>
                       </tr>
                     </tfoot>
                   </table>
@@ -257,27 +315,114 @@ const MyBills = () => {
       )}
 
       {editModal.open && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-            <h3 className="text-base font-bold mb-4 text-gray-800">Edit Customer Name</h3>
-            <div className="mb-6">
-              <label className="block mb-2 font-medium text-sm text-gray-700">Customer Name:</label>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-auto">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-lg">
+            <h3 className="text-base font-bold mb-4 text-gray-800">
+              Edit Invoice
+            </h3>
+
+            {/* Customer Name */}
+            <div className="mb-4">
+              <label className="block mb-2 font-medium text-sm text-gray-700">
+                Customer Name:
+              </label>
               <input
                 type="text"
                 value={editModal.bill.customerName || ""}
-                onChange={(e) => handleEditChange("customerName", e.target.value)}
+                onChange={(e) =>
+                  handleEditChange("customerName", e.target.value)
+                }
                 className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               />
             </div>
+
+            {/* Editable Items Table */}
+            <table className="w-full text-sm border border-gray-300 mb-4">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="p-2 border">Item Name</th>
+                  <th className="p-2 border">Price</th>
+                  <th className="p-2 border">Qty</th>
+                  <th className="p-2 border">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {editModal.bill.items.map((item, i) => (
+                  <tr key={i}>
+                    <td className="p-2 border">
+                      <input
+                        type="text"
+                        value={item.name}
+                        onChange={(e) => {
+                          const updatedItems = [...editModal.bill.items];
+                          updatedItems[i].name = e.target.value;
+                          handleEditChange("items", updatedItems);
+                        }}
+                        className="w-full p-1 border rounded text-xs"
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="number"
+                        value={item.price}
+                        onChange={(e) => {
+                          const updatedItems = [...editModal.bill.items];
+                          updatedItems[i].price = parseFloat(e.target.value);
+                          handleEditChange("items", updatedItems);
+                        }}
+                        className="w-full p-1 border rounded text-xs"
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => {
+                          const updatedItems = [...editModal.bill.items];
+                          updatedItems[i].quantity = parseInt(e.target.value);
+                          handleEditChange("items", updatedItems);
+                        }}
+                        className="w-full p-1 border rounded text-xs"
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      ₹{(item.price * item.quantity).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Footer Buttons */}
             <div className="flex justify-end space-x-4">
               <button
-                onClick={() => setEditModal({ open: false, bill: null, index: null })}
+                onClick={() =>
+                  setEditModal({ open: false, bill: null, index: null })
+                }
                 className="bg-gray-500 text-white px-2 py-1 rounded-lg hover:bg-gray-600 transition-all duration-200 text-xs"
               >
                 Cancel
               </button>
               <button
-                onClick={saveEditChanges}
+                onClick={() => {
+                  // recalculate total
+                  const updatedBill = { ...editModal.bill };
+                  const subtotal = updatedBill.items.reduce(
+                    (acc, item) => acc + item.price * item.quantity,
+                    0
+                  );
+                  updatedBill.subtotal =
+                    updatedBill.type === "gst" ? subtotal : 0;
+                  updatedBill.gst =
+                    updatedBill.type === "gst"
+                      ? parseFloat((subtotal * 0.18).toFixed(2))
+                      : 0;
+                  updatedBill.total = parseFloat(
+                    (subtotal + updatedBill.gst).toFixed(2)
+                  );
+                  setEditModal({ ...editModal, bill: updatedBill });
+                  saveEditChanges();
+                }}
                 className="bg-indigo-600 text-white px-2 py-1 rounded-lg hover:bg-indigo-700 transition-all duration-200 text-xs"
               >
                 Save
