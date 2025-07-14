@@ -10,6 +10,9 @@ const GenerateBill = ({ isGST }) => {
   const [customerName, setCustomerName] = useState("");
   const [productList, setProductList] = useState([]);
   const [printModal, setPrintModal] = useState({ open: false, invoice: null });
+  const [cashAmount, setCashAmount] = useState("");
+  const [onlineAmount, setOnlineAmount] = useState("");
+  const [creditAmount, setCreditAmount] = useState("");
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("products")) || [];
@@ -20,11 +23,7 @@ const GenerateBill = ({ isGST }) => {
     const selectedName = e.target.value;
     setItemName(selectedName);
     const found = productList.find((p) => p.productName === selectedName);
-    if (found) {
-      setItemPrice(found.productPrice);
-    } else {
-      setItemPrice("");
-    }
+    setItemPrice(found ? found.productPrice : "");
   };
 
   const addItem = () => {
@@ -85,6 +84,11 @@ const GenerateBill = ({ isGST }) => {
       items,
       customerName,
       ...totals,
+      paymentSplit: {
+        cash: parseFloat(cashAmount) || 0,
+        online: parseFloat(onlineAmount) || 0,
+        credit: parseFloat(creditAmount) || 0,
+      },
       type: isGST ? "gst" : "regular",
       status: "Pending",
       paymentDate: null,
@@ -96,12 +100,18 @@ const GenerateBill = ({ isGST }) => {
     setPrintModal({ open: true, invoice });
     setItems([]);
     setTotal("");
+    setCashAmount("");
+    setOnlineAmount("");
+    setCreditAmount("");
     alert(`${isGST ? "GST " : ""}Invoice saved!`);
   };
 
   const clearAll = () => {
     setItems([]);
     setTotal("");
+    setCashAmount("");
+    setOnlineAmount("");
+    setCreditAmount("");
   };
 
   return (
@@ -115,7 +125,7 @@ const GenerateBill = ({ isGST }) => {
           <select
             value={itemName}
             onChange={handleItemSelect}
-            className="flex-1 rounded p-1.5 border border-gray-300"
+            className="flex-1 rounded p-1 border border-gray-300"
           >
             <option value="">Select Product</option>
             {productList.map((p, i) => (
@@ -166,6 +176,7 @@ const GenerateBill = ({ isGST }) => {
             </li>
           ))}
         </ul>
+
         <div className="flex flex-col sm:flex-row gap-1">
           <input
             type="text"
@@ -175,6 +186,39 @@ const GenerateBill = ({ isGST }) => {
             className="flex-1 rounded p-1 border border-gray-300"
           />
         </div>
+
+        {total && (
+          <div className="space-y-1 mt-1">
+            <p>{total}</p>
+            <div className="flex flex-col sm:flex-row gap-1">
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Cash Amount"
+                value={cashAmount}
+                onChange={(e) => setCashAmount(e.target.value)}
+                className="flex-1 rounded p-1 border border-gray-300"
+              />
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Online Amount"
+                value={onlineAmount}
+                onChange={(e) => setOnlineAmount(e.target.value)}
+                className="flex-1 rounded p-1 border border-gray-300"
+              />
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Credit Amount"
+                value={creditAmount}
+                onChange={(e) => setCreditAmount(e.target.value)}
+                className="flex-1 rounded p-1 border border-gray-300"
+              />
+            </div>
+          </div>
+        )}
+
         <div className="space-x-1 mt-2">
           <button
             onClick={calculateTotal}
@@ -195,10 +239,8 @@ const GenerateBill = ({ isGST }) => {
             Clear
           </button>
         </div>
-        {total && <p className="mt-1">{total}</p>}
       </div>
 
-      {/* Invoice Modal */}
       {printModal.open && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 text-[11px]">
           <div className="bg-white rounded p-4 w-full max-w-2xl">
@@ -211,7 +253,6 @@ const GenerateBill = ({ isGST }) => {
                 Close
               </button>
             </div>
-
             <div className="border border-gray-400 p-2">
               <div className="flex items-center mb-2">
                 <img
@@ -294,6 +335,19 @@ const GenerateBill = ({ isGST }) => {
                       </td>
                       <td className="border px-2 py-1">
                         ₹{printModal.invoice.total.toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        colSpan="3"
+                        className="border px-2 py-1 text-right font-semibold"
+                      >
+                        Payment Split:
+                      </td>
+                      <td className="border px-2 py-1">
+                        Cash ₹{printModal.invoice.paymentSplit.cash} / Online ₹
+                        {printModal.invoice.paymentSplit.online} / Credit ₹
+                        {printModal.invoice.paymentSplit.credit}
                       </td>
                     </tr>
                   </tfoot>
