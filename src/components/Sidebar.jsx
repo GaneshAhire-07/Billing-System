@@ -32,26 +32,32 @@ const Sidebar = ({ isAdmin, activeSection, setActiveSection }) => {
         { id: 'calculatorLink', label: 'Calculator', icon: 'bi-calculator' },
       ];
 
+  // Debug log to check props
+  console.log('Sidebar Props:', { isAdmin, activeSection });
+
   return (
     <nav
       id="sidebar"
-      className="w-56 bg-gradient-to-b from-gray-800 to-gray-700 text-gray-100 h-screen transition-transform duration-300 md:translate-x-0 fixed top-0 bottom-0 z-50 md:shadow-md rounded-r-lg text-xs"
+      className="w-64 bg-gradient-to-b from-gray-800 to-gray-700 text-gray-100 h-screen transition-transform duration-300 md:translate-x-0 fixed top-0 bottom-0 z-50 md:shadow-lg rounded-r-lg"
     >
-      <div className="p-3">
-        <div className="flex items-center border-b border-gray-600 pb-3">
-          <i className="bi bi-building text-xl mr-2"></i>
-          <span className="text-base font-semibold">{isAdmin ? 'Admin Panel' : 'Employee Panel'}</span>
+      <div className="p-4">
+        <div className="flex items-center border-b border-gray-600 pb-4">
+          <i className="bi bi-building text-2xl mr-3"></i>
+          <span className="text-lg font-semibold">{isAdmin ? 'Admin Panel' : 'Employee Panel'}</span>
         </div>
-        <ul className="mt-3 space-y-1">
+        <ul className="mt-4 space-y-2">
           {navItems.map((item) => (
             <li key={item.id}>
               <button
-                onClick={() => setActiveSection(item.id.replace('Link', ''))}
-                className={`w-full text-left px-3 py-2 text-gray-300 font-medium hover:bg-gray-600 hover:text-white rounded transition-colors ${
+                onClick={() => {
+                  setActiveSection(item.id.replace('Link', ''));
+                  console.log('Setting active section to:', item.id.replace('Link', '')); // Debug log
+                }}
+                className={`w-full text-left px-4 py-2 text-gray-300 font-medium hover:bg-gray-600 hover:text-white rounded-lg transition-colors duration-200 ${
                   activeSection === item.id.replace('Link', '') ? 'bg-indigo-600 text-white' : ''
                 }`}
               >
-                <i className={`bi ${item.icon} mr-2 text-sm`}></i>
+                <i className={`bi ${item.icon} mr-2 text-base`}></i>
                 {item.label}
               </button>
             </li>
@@ -59,9 +65,9 @@ const Sidebar = ({ isAdmin, activeSection, setActiveSection }) => {
           <li>
             <button
               onClick={handleLogout}
-              className="w-full text-left px-3 py-2 text-gray-300 font-medium hover:bg-gray-600 hover:text-white rounded transition-colors"
+              className="w-full text-left px-4 py-2 text-gray-300 font-medium hover:bg-gray-600 hover:text-white rounded-lg transition-colors duration-200"
             >
-              <i className="bi bi-box-arrow-right mr-2 text-sm"></i>
+              <i className="bi bi-box-arrow-right mr-2 text-base"></i>
               Logout
             </button>
           </li>
