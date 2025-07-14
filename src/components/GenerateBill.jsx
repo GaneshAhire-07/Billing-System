@@ -408,12 +408,10 @@ const GenerateBill = ({ isGST }) => {
                         Cash ₹{printModal.invoice.paymentSplit.cash} / Online ₹
                         {printModal.invoice.paymentSplit.online} / Credit ₹
                         {printModal.invoice.paymentSplit.credit}
-                        
                       </td>
                     </tr>
 
-
- <tr>
+                    <tr>
                       <td
                         colSpan="3"
                         className="border px-2 py-1 text-right font-semibold"
@@ -421,15 +419,9 @@ const GenerateBill = ({ isGST }) => {
                         Pending Rs(₹):
                       </td>
                       <td className="border px-2 py-1">
-                     
                         {printModal.invoice.paymentSplit.credit}
-                        
                       </td>
                     </tr>
-
-
-
-
                   </tfoot>
                 </table>
               </div>
