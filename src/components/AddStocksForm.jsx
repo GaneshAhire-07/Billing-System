@@ -5,6 +5,7 @@ const AddStocksForm = () => {
   const [productId, setProductId] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [quantity, setQuantity] = useState('');
+  const [errors, setErrors] = useState({});
 
   const isProductIdExists = (id) => {
     const products = JSON.parse(localStorage.getItem('products')) || [];
@@ -17,93 +18,140 @@ const AddStocksForm = () => {
     localStorage.setItem('products', JSON.stringify(products));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validateForm = () => {
+    const newErrors = {};
     if (!productName || productName.length > 100) {
-      alert('Please enter a valid product name (1-100 characters).');
-      return;
+      newErrors.productName = 'Product name must be 1-100 characters.';
     }
     if (!productId || productId.length > 50) {
-      alert('Please enter a valid product ID (1-50 characters).');
-      return;
+      newErrors.productId = 'Product ID must be 1-50 characters.';
+    } else if (isProductIdExists(productId)) {
+      newErrors.productId = 'Product ID already exists.';
     }
     if (isNaN(productPrice) || productPrice <= 0) {
-      alert('Please enter a valid price greater than 0.');
-      return;
+      newErrors.productPrice = 'Price must be greater than 0.';
     }
     if (isNaN(quantity) || quantity <= 0) {
-      alert('Please enter a valid quantity greater than 0.');
+      newErrors.quantity = 'Quantity must be greater than 0.';
+    }
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
-    if (isProductIdExists(productId)) {
-      alert('Error: Product ID already exists. Please use a unique Product ID.');
-    } else {
-      saveProduct({
-        productName,
-        productId,
-        productPrice: parseFloat(productPrice),
-        quantity: parseInt(quantity),
-      });
-      setProductName('');
-      setProductId('');
-      setProductPrice('');
-      setQuantity('');
-      alert('Stock added successfully!');
-    }
+
+    saveProduct({
+      productName,
+      productId,
+      productPrice: parseFloat(productPrice),
+      quantity: parseInt(quantity),
+    });
+
+    setProductName('');
+    setProductId('');
+    setProductPrice('');
+    setQuantity('');
+    setErrors({});
+    alert('Stock added successfully!');
   };
 
   return (
-    <div className="p-2 text-[11px] leading-tight max-w-sm">
-      <h2 className="text-lg font-semibold text-gray-800 mb-2">Add New Stock</h2>
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <div>
-          <label htmlFor="productName" className="block text-gray-700 mb-0.5">Product Name</label>
+    <div className="bg-white rounded-lg shadow-md p-8 max-w-[70vw] w-full mx-auto my-6 sm:p-6" style={{ minHeight: '70vh' }}>
+      <h2 className="text-3xl font-semibold text-gray-800 text-center mb-8 sm:text-2xl">Add New Stock</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <label htmlFor="productName" className="block text-lg font-medium text-gray-700 sm:text-base">
+            Product Name
+          </label>
           <input
             type="text"
             id="productName"
-            className="w-60 rounded-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 focus:ring-0 text-[11px]"
+            className={`w-full rounded-md px-6 py-3 border text-lg focus:ring-0 focus:border-indigo-500 transition-colors ${
+              errors.productName ? 'border-red-500' : 'border-gray-300'
+            } sm:text-base sm:px-4 sm:py-2`}
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             required
+            aria-describedby={errors.productName ? 'productName-error' : undefined}
           />
+          {errors.productName && (
+            <p id="productName-error" className="text-red-500 text-sm sm:text-xs">
+              {errors.productName}
+            </p>
+          )}
         </div>
-        <div>
-          <label htmlFor="productId" className="block text-gray-700 mb-0.5">Product ID</label>
+        <div className="space-y-2">
+          <label htmlFor="productId" className="block text-lg font-medium text-gray-700 sm:text-base">
+            Product ID
+          </label>
           <input
             type="text"
             id="productId"
-            className="w-60 rounded-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 focus:ring-0 text-[11px]"
+            className={`w-full rounded-md px-6 py-3 border text-lg focus:ring-0 focus:border-indigo-500 transition-colors ${
+              errors.productId ? 'border-red-500' : 'border-gray-300'
+            } sm:text-base sm:px-4 sm:py-2`}
             value={productId}
             onChange={(e) => setProductId(e.target.value)}
             required
+            aria-describedby={errors.productId ? 'productId-error' : undefined}
           />
+          {errors.productId && (
+            <p id="productId-error" className="text-red-500 text-sm sm:text-xs">
+              {errors.productId}
+            </p>
+          )}
         </div>
-        <div>
-          <label htmlFor="productPrice" className="block text-gray-700 mb-0.5">Price (₹)</label>
+        <div className="space-y-2">
+          <label htmlFor="productPrice" className="block text-lg font-medium text-gray-700 sm:text-base">
+            Price (₹)
+          </label>
           <input
             type="number"
             step="0.01"
             id="productPrice"
-            className="w-60 rounded-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 focus:ring-0 text-[11px]"
+            className={`w-full rounded-md px-6 py-3 border text-lg focus:ring-0 focus:border-indigo-500 transition-colors ${
+              errors.productPrice ? 'border-red-500' : 'border-gray-300'
+            } sm:text-base sm:px-4 sm:py-2`}
             value={productPrice}
             onChange={(e) => setProductPrice(e.target.value)}
             required
+            aria-describedby={errors.productPrice ? 'productPrice-error' : undefined}
           />
+          {errors.productPrice && (
+            <p id="productPrice-error" className="text-red-500 text-sm sm:text-xs">
+              {errors.productPrice}
+            </p>
+          )}
         </div>
-        <div>
-          <label htmlFor="quantity" className="block text-gray-700 mb-0.5">Quantity</label>
+        <div className="space-y-2">
+          <label htmlFor="quantity" className="block text-lg font-medium text-gray-700 sm:text-base">
+            Quantity
+          </label>
           <input
             type="number"
             id="quantity"
-            className="w-60 rounded-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 focus:ring-0 text-[11px]"
+            className={`w-full rounded-md px-6 py-3 border text-lg focus:ring-0 focus:border-indigo-500 transition-colors ${
+              errors.quantity ? 'border-red-500' : 'border-gray-300'
+            } sm:text-base sm:px-4 sm:py-2`}
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             required
+            aria-describedby={errors.quantity ? 'quantity-error' : undefined}
           />
+          {errors.quantity && (
+            <p id="quantity-error" className="text-red-500 text-sm sm:text-xs">
+              {errors.quantity}
+            </p>
+          )}
         </div>
         <button
           type="submit"
-          className="bg-indigo-600 text-white rounded-sm px-4 py-2 font-medium text-[11px] hover:bg-indigo-700 transition-all"
+          className="w-full bg-indigo-600 text-white rounded-md px-6 py-3 text-lg font-medium hover:bg-indigo-700 transition-colors sm:text-base sm:px-4 sm:py-2"
         >
           Add Stock
         </button>

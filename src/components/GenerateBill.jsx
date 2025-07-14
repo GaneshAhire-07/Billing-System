@@ -115,13 +115,16 @@ const GenerateBill = ({ isGST }) => {
   };
 
   return (
-    <div className="p-2 text-[11px] leading-tight">
-      <h2 className="text-lg font-semibold text-gray-800 mb-2">
+    <div
+      className="p-8 max-w-[75vw] w-full mx-auto my-8"
+      style={{ minHeight: "60vh" }}
+    >
+      <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
         {isGST ? "Generate GST Bill" : "Generate Bill"}
       </h2>
 
-      <div className="space-y-2 mb-3">
-        <div className="flex flex-col sm:flex-row gap-1">
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row gap-4">
           <select
             value={itemName}
             onChange={handleItemSelect}
@@ -141,35 +144,35 @@ const GenerateBill = ({ isGST }) => {
             step="0.01"
             value={itemPrice}
             onChange={(e) => setItemPrice(e.target.value)}
-            className="flex-1 rounded p-1 border border-gray-300"
+            className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
           />
           <input
             type="number"
             placeholder="Qty"
             value={itemQuantity}
             onChange={(e) => setItemQuantity(e.target.value)}
-            className="flex-1 rounded p-1 border border-gray-300"
+            className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
           />
           <button
             onClick={addItem}
-            className="bg-indigo-600 text-white rounded px-3 py-1.5 hover:bg-indigo-700"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 text-lg"
           >
             Add
           </button>
         </div>
 
-        <ul className="space-y-1">
+        <ul className="space-y-2">
           {items.map((item, i) => (
             <li
               key={i}
-              className="flex justify-between items-center bg-gray-50 p-1 rounded border text-[11px]"
+              className="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm text-lg"
             >
               <span>
                 {item.name} - ₹{item.price} × {item.quantity}
               </span>
               <button
                 onClick={() => removeItem(i)}
-                className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+                className="bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 transition-all duration-200"
               >
                 Remove
               </button>
@@ -183,7 +186,7 @@ const GenerateBill = ({ isGST }) => {
             placeholder="Customer Name"
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
-            className="flex-1 rounded p-1 border border-gray-300"
+            className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
           />
         </div>
 
@@ -197,7 +200,7 @@ const GenerateBill = ({ isGST }) => {
                 placeholder="Cash Amount"
                 value={cashAmount}
                 onChange={(e) => setCashAmount(e.target.value)}
-                className="flex-1 rounded p-1 border border-gray-300"
+                className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
               />
               <input
                 type="number"
@@ -205,7 +208,7 @@ const GenerateBill = ({ isGST }) => {
                 placeholder="Online Amount"
                 value={onlineAmount}
                 onChange={(e) => setOnlineAmount(e.target.value)}
-                className="flex-1 rounded p-1 border border-gray-300"
+                className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
               />
               <input
                 type="number"
@@ -213,7 +216,7 @@ const GenerateBill = ({ isGST }) => {
                 placeholder="Credit Amount"
                 value={creditAmount}
                 onChange={(e) => setCreditAmount(e.target.value)}
-                className="flex-1 rounded p-1 border border-gray-300"
+                className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
               />
             </div>
           </div>
@@ -222,19 +225,19 @@ const GenerateBill = ({ isGST }) => {
         <div className="space-x-1 mt-2">
           <button
             onClick={calculateTotal}
-            className="bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700"
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all duration-200 text-lg"
           >
             Calculate
           </button>
           <button
             onClick={generateInvoice}
-            className="bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 text-lg"
           >
             Generate
           </button>
           <button
             onClick={clearAll}
-            className="bg-red-600 text-white px-3 py-1.5 rounded hover:bg-red-700"
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-200 text-lg"
           >
             Clear
           </button>
@@ -242,13 +245,13 @@ const GenerateBill = ({ isGST }) => {
       </div>
 
       {printModal.open && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 text-[11px]">
-          <div className="bg-white rounded p-4 w-full max-w-2xl">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-base font-bold">Invoice</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-2xl font-bold text-gray-800">Invoice</h3>
               <button
                 onClick={() => setPrintModal({ open: false, invoice: null })}
-                className="text-sm bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600"
+                className="bg-gray-500 text-white px-3 py-1.5 rounded-lg hover:bg-gray-600 transition-all duration-200 text-lg"
               >
                 Close
               </button>
@@ -258,19 +261,19 @@ const GenerateBill = ({ isGST }) => {
                 <img
                   src={myImg}
                   alt="Logo"
-                  className="w-10 h-10 mr-2 object-contain"
+                  className="w-16 h-16 mr-4 object-contain"
                 />
-                <div>
-                  <div className="text-sm font-semibold">
+                <div className="text-lg">
+                  <div className="font-semibold">
                     Cirasthayi Technology PVT. LTD.
                   </div>
-                  <div className="text-xs">
+                  <div className="text-gray-600">
                     Marisoft Tower, Pune 411014 | +91 1234567890
                   </div>
                 </div>
               </div>
-              <div className="border-t border-gray-300 pt-2 text-xs">
-                <div className="flex justify-between mb-1">
+              <div className="border-t border-gray-200 pt-4 text-lg">
+                <div className="flex justify-between mb-2">
                   <span>
                     <strong>ID:</strong> {printModal.invoice.id}
                   </span>
@@ -278,22 +281,24 @@ const GenerateBill = ({ isGST }) => {
                     <strong>Date:</strong> {printModal.invoice.date}
                   </span>
                 </div>
-                <table className="w-full border border-gray-300 text-[11px]">
+                <table className="w-full border border-gray-300 text-lg">
                   <thead>
                     <tr className="bg-gray-100">
-                      <th className="border px-2 py-1 text-left">Item</th>
-                      <th className="border px-2 py-1 text-left">Price</th>
-                      <th className="border px-2 py-1 text-left">Qty</th>
-                      <th className="border px-2 py-1 text-left">Total</th>
+                      <th className="border px-4 py-2 text-left">Item</th>
+                      <th className="border px-4 py-2 text-left">Price</th>
+                      <th className="border px-4 py-2 text-left">Qty</th>
+                      <th className="border px-4 py-2 text-left">Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {printModal.invoice.items.map((item, i) => (
                       <tr key={i}>
-                        <td className="border px-2 py-1">{item.name}</td>
-                        <td className="border px-2 py-1">₹{item.price}</td>
-                        <td className="border px-2 py-1">{item.quantity}</td>
-                        <td className="border px-2 py-1">
+                        <td className="border px-4 py-2">{item.name}</td>
+                        <td className="border px-4 py-2">
+                          ₹{item.price.toFixed(2)}
+                        </td>
+                        <td className="border px-4 py-2">{item.quantity}</td>
+                        <td className="border px-4 py-2">
                           ₹{(item.price * item.quantity).toFixed(2)}
                         </td>
                       </tr>
@@ -305,22 +310,22 @@ const GenerateBill = ({ isGST }) => {
                         <tr>
                           <td
                             colSpan="3"
-                            className="border px-2 py-1 text-right font-semibold"
+                            className="border px-4 py-2 text-right font-semibold"
                           >
                             Subtotal:
                           </td>
-                          <td className="border px-2 py-1">
+                          <td className="border px-4 py-2">
                             ₹{printModal.invoice.subtotal.toFixed(2)}
                           </td>
                         </tr>
                         <tr>
                           <td
                             colSpan="3"
-                            className="border px-2 py-1 text-right font-semibold"
+                            className="border px-4 py-2 text-right font-semibold"
                           >
                             GST (18%):
                           </td>
-                          <td className="border px-2 py-1">
+                          <td className="border px-4 py-2">
                             ₹{printModal.invoice.gst.toFixed(2)}
                           </td>
                         </tr>
@@ -329,11 +334,11 @@ const GenerateBill = ({ isGST }) => {
                     <tr>
                       <td
                         colSpan="3"
-                        className="border px-2 py-1 text-right font-semibold"
+                        className="border px-4 py-2 text-right font-semibold"
                       >
                         Total:
                       </td>
-                      <td className="border px-2 py-1">
+                      <td className="border px-4 py-2">
                         ₹{printModal.invoice.total.toFixed(2)}
                       </td>
                     </tr>
@@ -353,10 +358,10 @@ const GenerateBill = ({ isGST }) => {
                   </tfoot>
                 </table>
               </div>
-              <div className="text-right mt-2">
+              <div className="text-right mt-4">
                 <button
                   onClick={() => window.print()}
-                  className="bg-indigo-600 text-white text-xs px-3 py-1 rounded hover:bg-indigo-700"
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 text-lg"
                 >
                   Print
                 </button>
